@@ -1,5 +1,5 @@
 {
-  "name": "myapp",
+  "name": "options_logger",
   "description": "Build scripts for Heroku",
   "engines": {
     "node": "21.x"

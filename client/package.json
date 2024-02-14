@@ -1,5 +1,5 @@
 {
-  "name": "myapp-client",
+  "name": "options_logger-client",
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:3000",
@@ -8,10 +8,13 @@
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1"
   },
   "devDependencies": {
-    "react-scripts": "^5.0.1",
+    "@babel/plugin-proposal-private-property-in-object": "7.21.11",
+    "resolve-url-loader": "5.0.0",
+    "@svgr/webpack": "8.1.0",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
     "@testing-library/user-event": "^14.5.2",
@@ -40,5 +43,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "overrides": {
+    "react-scripts": {
+      "@svgr/webpack": "8.1.0",
+      "resolve-url-loader": "5.0.0"
+    }
   }
 }
