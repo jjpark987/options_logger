@@ -1,0 +1,3 @@
+class CoveredCallWriting < ApplicationRecord
+    
+end
