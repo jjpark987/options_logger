@@ -15,19 +15,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_14_164018) do
   enable_extension "plpgsql"
 
   create_table "covered_call_writing", force: :cascade do |t|
+    t.boolean "is_margin_account"
     t.string "ticker"
-    t.float "initial_stock"
-    t.float "current_stock"
+    t.float "init_stock_price"
     t.integer "shares"
-    t.string "expiration"
     t.float "strike"
     t.float "premium"
-    t.string "initial_type"
-    t.string "current_type"
+    t.date "expiration"
+    t.integer "contracts"
     t.float "dividends"
-    t.float "per_option_fee"
-    t.float "margin_rate"
-    t.float "margin_interest_rate"
+    t.float "current_stock_price"
+    t.date "closed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
