@@ -1,13 +1,15 @@
 class CoveredCallWriting < ApplicationRecord
+    validates :ticker, :expiration, presence: true
+    validates :init_stock_price, :shares, :strike, :premium, :contracts, :total_dividends, :current_stock_price, presence: true, numericality: { only_numeric: true }
+    
     # Contract fee + activity assessment fee
-    # PER_OPTION_FEE = 0.65 + 0.04
-    PER_OPTION_FEE = 5
+    PER_OPTION_FEE = 0.65 + 0.04
     # Set by Federal Reserves
-    MARGIN_RATE = 0.5
+    MARGIN_RATE = 0.50
 
     # Cost of stock transaction
     def stock_cost
-        @shares * @init_stock_price
+        shares * init_stock_price
     end
 
     # Annual margin interest rate
@@ -30,28 +32,28 @@ class CoveredCallWriting < ApplicationRecord
 
     # Duration of option contract
     def duration
-        (@expiration - @created_at).to_i
+        (expiration - created_at.to_date).to_i
     end
 
     # Total amount charged for margin interest
     def margin_interest_charges
-        stock_cost * MARGIN_RATE * margin_interest_rate / duration
+        stock_cost * MARGIN_RATE * margin_interest_rate * duration / 360
     end
 
     # Money required for covered call writing
     def net_investment
-        if @is_margin_account
+        if is_margin_account
             # Required equity in account
-            (stock_cost * MARGIN_RATE) - @premium + (@contracts * PER_OPTION_FEE)
+            (stock_cost * MARGIN_RATE) - (contracts * premium * 100) + (contracts * PER_OPTION_FEE)
         else
             # Initial payment
-            stock_cost - @premium + (@contracts * PER_OPTION_FEE)
+            stock_cost - (contracts * premium * 100) + (contracts * PER_OPTION_FEE)
         end
     end
 
     # Money owed to broker
     def debit_balance
-        if @is_margin_account
+        if is_margin_account
             stock_cost - (stock_cost * MARGIN_RATE)
         else
             nil
@@ -60,10 +62,10 @@ class CoveredCallWriting < ApplicationRecord
 
     # Profit after selling shares at strike price (at expiration)
     def net_profit_if_exercised
-        if @is_margin_account
-            (@shares * @strike) + @total_dividends - net_investment - debit_balance - margin_interest_charges
+        if is_margin_account
+            (shares * strike) + total_dividends - net_investment - debit_balance - margin_interest_charges
         else
-            (@shares * @strike) + @total_dividends - net_investment
+            (shares * strike) + total_dividends - net_investment
         end
     end
 
@@ -74,10 +76,10 @@ class CoveredCallWriting < ApplicationRecord
 
     # Profit if stock price does not change (at expiration)
     def net_profit_if_unchanged
-        if @is_margin_account
-            stock_cost + @total_dividends - net_investment - debit_balance - margin_interest_charges
+        if is_margin_account
+            stock_cost + total_dividends - net_investment - debit_balance - margin_interest_charges
         else
-            stock_cost + @total_dividends - net_investment
+            stock_cost + total_dividends - net_investment
         end
     end
 
@@ -88,15 +90,15 @@ class CoveredCallWriting < ApplicationRecord
 
     # Stock price at which the strategy breaks even on the downside (at expiration)
     def downside_break_even
-        if @is_margin_account
-            (net_investment + debit_balance - @total_dividends + margin_interest_charges) / @shares
+        if is_margin_account
+            (net_investment + debit_balance - total_dividends + margin_interest_charges) / shares
         else
-            (net_investment - @total_dividends) / @shares
+            (net_investment - total_dividends) / shares
         end
     end
 
     # Percentage of downside protection provided by the strategy relative to the initial stock price
     def percent_downside_protection
-        (@init_stock_price - downside_break_even) / @init_stock_price
+        (init_stock_price - downside_break_even) / init_stock_price
     end
 end

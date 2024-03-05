@@ -14,16 +14,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_14_164018) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "covered_call_writing", force: :cascade do |t|
+  create_table "covered_call_writings", force: :cascade do |t|
     t.boolean "is_margin_account"
     t.string "ticker"
     t.float "init_stock_price"
-    t.integer "shares"
+    t.float "shares"
     t.float "strike"
     t.float "premium"
     t.date "expiration"
-    t.integer "contracts"
-    t.float "dividends"
+    t.float "contracts"
+    t.float "total_dividends"
     t.float "current_stock_price"
     t.date "closed_at"
     t.datetime "created_at", null: false
