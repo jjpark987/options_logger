@@ -21,9 +21,6 @@ gem 'bootsnap', '~> 1.18', '>= 1.18.3', require: false
 # Make HTTP requests to RESTful API
 gem 'rest-client', '~> 2.1'
 
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.11', '>= 2.11.5'
-
 # Use Active Model has_secure_password
 gem 'bcrypt', '~> 3.1', '>= 3.1.20'
 
